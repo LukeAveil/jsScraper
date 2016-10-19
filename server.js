@@ -17,7 +17,10 @@ app.get('/scrape', function(req, res){
         var data = $(this);
 
         title = data.children().first().text();
+        release = data.children().last().children().text();
+
         json.title = title;
+        json.release = release;
       });
     }
   });
