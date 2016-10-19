@@ -13,7 +13,7 @@ app.get('/scrape', function(req, res){
       var title, release, rating;
       var json = {title : "", release : "", rating : ""};
 
-      $('.header').filter(function(){
+      $('.title_wrapper').filter(function(){
         var data = $(this);
 
         title = data.children().first().text();
@@ -30,7 +30,12 @@ app.get('/scrape', function(req, res){
 
         json.rating = rating;
       });
+
+      fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
+        console.log('File written, check project directory');
+      });
     }
+
   });
 });
 
