@@ -4,7 +4,10 @@ var cheerio = require('cheerio');
 var app = express();
 
 var url = 'http://www.gocardless.com';
+
 var images = [];
+var links = [];
+var scripts = [];
 
 app.get('/', function(req, res){
 
@@ -12,10 +15,21 @@ app.get('/', function(req, res){
     if(!error){
       var $ = cheerio.load(html);
 
-      $('img').each(function(i, image){
-        images.push($(image).attr('src'));
+      $('img').each(function(i, element){
+        images.push($(element).attr('src'));
       });
+
+      $('link').each(function(i, element){
+        links.push($(element).attr('href'));
+      });
+
+      $('script').each(function(i, element){
+        scripts.push($(element).attr('src'));
+      });
+
       console.log(images);
+      console.log(links);
+      console.log(scripts);
     }
   });
 });
