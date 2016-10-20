@@ -3,7 +3,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var app = express();
 
-var url = 'http://www.gocardless.com';
+var START_URL = 'http://www.gocardless.com';
 
 var images = [];
 var links = [];
@@ -12,26 +12,25 @@ var pagesToVisit = [];
 
 app.get('/', function(req, res){
 
-  request(url, function(error, response, html){
-    if(!error){
-      var $ = cheerio.load(html);
+  request(START_URL, function(error, response, html){
+    var $ = cheerio.load(html);
+    collectLinks($);
 
-        $('img').each(function(i, element){
-          images.push($(element).attr('src'));
-        });
+      $('img').each(function(i, element){
+        images.push($(element).attr('src'));
+      });
 
-        $('link').each(function(i, element){
-          links.push($(element).attr('href'));
-        });
+      $('link').each(function(i, element){
+        links.push($(element).attr('href'));
+      });
 
-        $('script').each(function(i, element){
-          scripts.push($(element).attr('src'));
-        });
+      $('script').each(function(i, element){
+        scripts.push($(element).attr('src'));
+      });
 
-        console.log(images);
-        console.log(links);
-        console.log(scripts);
-    }
+      console.log(images);
+      console.log(links);
+      console.log(scripts);
   });
 });
 
@@ -39,7 +38,7 @@ function collectLinks($) {
   var relativeLinks = $("a[href^='/']");
 
   relativeLinks.each(function(){
-    pagesToVisit.push(url + $(this).attr('href'));
+    pagesToVisit.push(START_URL + $(this).attr('href'));
   });
 }
 
