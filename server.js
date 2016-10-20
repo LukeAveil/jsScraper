@@ -8,6 +8,7 @@ var url = 'http://www.gocardless.com';
 var images = [];
 var links = [];
 var scripts = [];
+var pagesToVisit = [];
 
 app.get('/', function(req, res){
 
@@ -15,24 +16,32 @@ app.get('/', function(req, res){
     if(!error){
       var $ = cheerio.load(html);
 
-      $('img').each(function(i, element){
-        images.push($(element).attr('src'));
-      });
+        $('img').each(function(i, element){
+          images.push($(element).attr('src'));
+        });
 
-      $('link').each(function(i, element){
-        links.push($(element).attr('href'));
-      });
+        $('link').each(function(i, element){
+          links.push($(element).attr('href'));
+        });
 
-      $('script').each(function(i, element){
-        scripts.push($(element).attr('src'));
-      });
+        $('script').each(function(i, element){
+          scripts.push($(element).attr('src'));
+        });
 
-      console.log(images);
-      console.log(links);
-      console.log(scripts);
+        console.log(images);
+        console.log(links);
+        console.log(scripts);
     }
   });
 });
+
+function collectLinks($) {
+  var relativeLinks = $("a[href^='/']");
+
+  relativeLinks.each(function(){
+    pagesToVisit.push(url + $(this).attr('href'));
+  });
+}
 
 app.listen('8081');
 exports = module.exports = app;
